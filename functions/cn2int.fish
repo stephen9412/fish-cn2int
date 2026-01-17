@@ -17,14 +17,69 @@ end
 function _parse_number
     set -l input $argv[1]
     
-    set -l ten_thousands 0
+    set -l hundred_millions 0
+    set -l wan_part 0
+    set -l remainder_part 0
+    
+    set -l has_yi (string match -q '*億*' -- $input; and echo 1; or echo 0)
+    set -l has_wan (string match -q '*萬*' -- $input; and echo 1; or echo 0)
+    set -l has_qian (string match -q '*千*' -- $input; and echo 1; or echo 0)
+    set -l has_bai (string match -q '*百*' -- $input; and echo 1; or echo 0)
+    set -l has_shi (string match -q '*十*' -- $input; and echo 1; or echo 0)
+    
+    set -l len (string length -- $input)
+    
+    if test $has_yi -eq 0 -a $has_wan -eq 0 -a $has_qian -eq 0 -a $has_bai -eq 0 -a $has_shi -eq 0 -a $len -ge 5
+        if test $len -eq 9
+            set hundred_millions (string sub -l 1 -- $input)
+            set -l wan_digits (string sub -s 2 -l 4 -- $input)
+            set wan_part (_parse_simple $wan_digits)
+            set -l rem_digits (string sub -s 6 -l 4 -- $input)
+            set remainder_part (_parse_simple $rem_digits)
+            math "$hundred_millions * 100000000 + $wan_part * 10000 + $remainder_part"
+            return
+        else if test $len -ge 5
+            set -l wan_digits (string sub -l (math $len - 4) -- $input)
+            set wan_part (_parse_simple $wan_digits)
+            set -l rem_digits (string sub -s (math $len - 3) -- $input)
+            set remainder_part (_parse_simple $rem_digits)
+            math "$wan_part * 10000 + $remainder_part"
+            return
+        end
+    end
+
+    if string match -q '*億*' -- $input
+        set -l parts (string split '億' -- $input)
+        set -l yi_coef $parts[1]
+        test -z "$yi_coef"; and set yi_coef 1
+        set hundred_millions (_parse_simple $yi_coef)
+        set input $parts[2]
+    end
+
+    if string match -q '*萬*' -- $input
+        set -l parts (string split '萬' -- $input)
+        set -l wan_str $parts[1]
+        test -z "$wan_str"; and set wan_str 1
+        set wan_part (_parse_simple $wan_str)
+        set input $parts[2]
+    end
+
+    test -z "$input"; and set input 0
+    set remainder_part (_parse_simple $input)
+
+    math "$hundred_millions * 100000000 + $wan_part * 10000 + $remainder_part"
+end
+
+
+function _parse_simple
+    set -l input $argv[1]
+    
+    test -z "$input"; and echo 0; and return
+    
     set -l thousands 0
     set -l hundreds 0
     set -l tens 0
     set -l units 0
-
-    set ten_thousands (_extract_and_consume $input '萬')
-    set input $cn_extract_remainder
 
     set thousands (_extract_and_consume $input '千')
     set input $cn_extract_remainder
@@ -41,7 +96,7 @@ function _parse_number
     else if test $len -eq 1
         set units $input
     else if test $len -eq 2
-        if test $ten_thousands -eq 0 -a $thousands -eq 0 -a $hundreds -eq 0 -a $tens -eq 0
+        if test $thousands -eq 0 -a $hundreds -eq 0 -a $tens -eq 0
             set tens (string sub -l 1 -- $input)
             set units (string sub -s 2 -l 1 -- $input)
         else
@@ -49,7 +104,7 @@ function _parse_number
             set units (string sub -s 2 -l 1 -- $input)
         end
     else if test $len -eq 3
-        if test $ten_thousands -eq 0 -a $thousands -eq 0
+        if test $thousands -eq 0
             set hundreds (string sub -l 1 -- $input)
             set tens (string sub -s 2 -l 1 -- $input)
             set units (string sub -s 3 -l 1 -- $input)
@@ -58,25 +113,13 @@ function _parse_number
             set units (string sub -s 3 -l 1 -- $input)
         end
     else if test $len -eq 4
-        if test $ten_thousands -eq 0
-            set thousands (string sub -l 1 -- $input)
-            set hundreds (string sub -s 2 -l 1 -- $input)
-            set tens (string sub -s 3 -l 1 -- $input)
-            set units (string sub -s 4 -l 1 -- $input)
-        else
-            set hundreds (string sub -s 2 -l 1 -- $input)
-            set tens (string sub -s 3 -l 1 -- $input)
-            set units (string sub -s 4 -l 1 -- $input)
-        end
-    else if test $len -eq 5
-        set ten_thousands (string sub -l 1 -- $input)
-        set thousands (string sub -s 2 -l 1 -- $input)
-        set hundreds (string sub -s 3 -l 1 -- $input)
-        set tens (string sub -s 4 -l 1 -- $input)
-        set units (string sub -s 5 -l 1 -- $input)
+        set thousands (string sub -l 1 -- $input)
+        set hundreds (string sub -s 2 -l 1 -- $input)
+        set tens (string sub -s 3 -l 1 -- $input)
+        set units (string sub -s 4 -l 1 -- $input)
     end
 
-    math "$ten_thousands * 10000 + $thousands * 1000 + $hundreds * 100 + $tens * 10 + $units"
+    math "$thousands * 1000 + $hundreds * 100 + $tens * 10 + $units"
 end
 
 
@@ -129,6 +172,7 @@ function _cn_map_digits
     set str (string replace -a '佰' '百' -- $str)
     set str (string replace -a '仟' '千' -- $str)
     set str (string replace -a '万' '萬' -- $str)
+    set str (string replace -a '亿' '億' -- $str)
     echo $str
 end
 

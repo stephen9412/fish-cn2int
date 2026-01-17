@@ -28,7 +28,7 @@ source $test_dir/../functions/cn2int.fish
 
 
 @test "Complete: 贰億叁仟肆佰伍拾陆萬柒仟捌佰玖拾壹" (cn2int 贰億叁仟肆佰伍拾陆萬柒仟捌佰玖拾壹) = 234567891
-@test "Complete: 叁億肆佰伍拾陆萬柒仟捌佰玖拾贰" (cn2int 叁億肆佰伍拾陆萬柒仟捌佰玖拾贰) = 345678902
+@test "Complete: 叁億肆佰伍拾陆萬柒仟捌佰玖拾贰" (cn2int 叁億肆佰伍拾陆萬柒仟捌佰玖拾贰) = 304567892
 
 
 @test "Complete: 贰亿叁仟肆佰伍拾陆万柒仟捌佰玖拾壹" (cn2int 贰亿叁仟肆佰伍拾陆万柒仟捌佰玖拾壹) = 234567891
