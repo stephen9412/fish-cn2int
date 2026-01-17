@@ -209,7 +209,9 @@ MIT License - see LICENSE file for details.
 
 ## Author
 
-Created with ❤️ using Test-Driven Development (TDD).
+**Stephen J. Li**
+
+- Github: [@stephen9412](https://github.com/stephen9412)
 
 ---
 

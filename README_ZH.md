@@ -209,7 +209,9 @@ MIT 许可证 - 详见 LICENSE 文件。
 
 ## 作者
 
-使用测试驱动开发（TDD）方法创建 ❤️
+**Stephen J. Li**
+
+- Github: [@stephen9412](https://github.com/stephen9412)
 
 ---
 
