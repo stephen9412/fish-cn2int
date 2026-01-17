@@ -17,10 +17,14 @@ end
 function _parse_number
     set -l input $argv[1]
     
+    set -l ten_thousands 0
     set -l thousands 0
     set -l hundreds 0
     set -l tens 0
     set -l units 0
+
+    set ten_thousands (_extract_and_consume $input '萬')
+    set input $cn_extract_remainder
 
     set thousands (_extract_and_consume $input '千')
     set input $cn_extract_remainder
@@ -37,7 +41,7 @@ function _parse_number
     else if test $len -eq 1
         set units $input
     else if test $len -eq 2
-        if test $thousands -eq 0 -a $hundreds -eq 0 -a $tens -eq 0
+        if test $ten_thousands -eq 0 -a $thousands -eq 0 -a $hundreds -eq 0 -a $tens -eq 0
             set tens (string sub -l 1 -- $input)
             set units (string sub -s 2 -l 1 -- $input)
         else
@@ -45,7 +49,7 @@ function _parse_number
             set units (string sub -s 2 -l 1 -- $input)
         end
     else if test $len -eq 3
-        if test $thousands -eq 0
+        if test $ten_thousands -eq 0 -a $thousands -eq 0
             set hundreds (string sub -l 1 -- $input)
             set tens (string sub -s 2 -l 1 -- $input)
             set units (string sub -s 3 -l 1 -- $input)
@@ -54,13 +58,25 @@ function _parse_number
             set units (string sub -s 3 -l 1 -- $input)
         end
     else if test $len -eq 4
-        set thousands (string sub -l 1 -- $input)
-        set hundreds (string sub -s 2 -l 1 -- $input)
-        set tens (string sub -s 3 -l 1 -- $input)
-        set units (string sub -s 4 -l 1 -- $input)
+        if test $ten_thousands -eq 0
+            set thousands (string sub -l 1 -- $input)
+            set hundreds (string sub -s 2 -l 1 -- $input)
+            set tens (string sub -s 3 -l 1 -- $input)
+            set units (string sub -s 4 -l 1 -- $input)
+        else
+            set hundreds (string sub -s 2 -l 1 -- $input)
+            set tens (string sub -s 3 -l 1 -- $input)
+            set units (string sub -s 4 -l 1 -- $input)
+        end
+    else if test $len -eq 5
+        set ten_thousands (string sub -l 1 -- $input)
+        set thousands (string sub -s 2 -l 1 -- $input)
+        set hundreds (string sub -s 3 -l 1 -- $input)
+        set tens (string sub -s 4 -l 1 -- $input)
+        set units (string sub -s 5 -l 1 -- $input)
     end
 
-    math "$thousands * 1000 + $hundreds * 100 + $tens * 10 + $units"
+    math "$ten_thousands * 10000 + $thousands * 1000 + $hundreds * 100 + $tens * 10 + $units"
 end
 
 
@@ -112,6 +128,7 @@ function _cn_map_digits
     set str (string replace -a '拾' '十' -- $str)
     set str (string replace -a '佰' '百' -- $str)
     set str (string replace -a '仟' '千' -- $str)
+    set str (string replace -a '万' '萬' -- $str)
     echo $str
 end
 
