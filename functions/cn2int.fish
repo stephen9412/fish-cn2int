@@ -9,27 +9,50 @@ function cn2int
 
     set input (_cn_map_digits $input)
 
-    if string match -q '*十*' -- $input
-        # 以 "十" 為界切割
-        set -l parts (string split "十" -- $input)
-        set -l tens $parts[1]
-        set -l units $parts[2]
+    set -l result 0
+    set -l hundreds 0
+    set -l tens 0
+    set -l units 0
 
-        # 如果十前面是空的 (例如 "十五" -> "十5")，補 1
+    if string match -q '*百*' -- $input
+        set -l parts (string split "百" -- $input)
+        set hundreds $parts[1]
+        if test -z "$hundreds"
+            set hundreds 1
+        end
+        set input $parts[2]
+    end
+
+    if string match -q '*十*' -- $input
+        set -l parts (string split "十" -- $input)
+        set tens $parts[1]
         if test -z "$tens"
             set tens 1
         end
-
-        # 如果十後面是空的 (例如 "二十" -> "2十")，補 0
+        set units $parts[2]
         if test -z "$units"
             set units 0
         end
-
-        math "$tens * 10 + $units"
     else
-        # 沒有十，代表是個位數 (例如 "八" -> 變成 "8" 走到這)
-        math $input
+        set units $input
+        if test -z "$units"
+            set units 0
+        end
     end
+
+    set -l len (string length -- $units)
+    if test $len -eq 3
+        set hundreds (string sub -l 1 -- $units)
+        set tens (string sub -s 2 -l 1 -- $units)
+        set units (string sub -s 3 -l 1 -- $units)
+    else if test $len -eq 2
+        if test $hundreds -eq 0
+            set tens (string sub -l 1 -- $units)
+            set units (string sub -s 2 -l 1 -- $units)
+        end
+    end
+
+    math "$hundreds * 100 + $tens * 10 + $units"
 end
 
 
@@ -61,6 +84,7 @@ function _cn_map_digits
     set str (string replace -a '叁' '3' -- $str)
     set str (string replace -a '陆' '6' -- $str)
     set str (string replace -a '拾' '十' -- $str)
+    set str (string replace -a '佰' '百' -- $str)
     echo $str
 end
 
