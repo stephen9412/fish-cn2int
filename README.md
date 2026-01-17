@@ -213,6 +213,10 @@ MIT License - see LICENSE file for details.
 
 - Github: [@stephen9412](https://github.com/stephen9412)
 
+### 🏕️ Created With Nature
+
+This project was completed in a camper van beside [Antong Hot Springs](https://maps.app.goo.gl/rGRqAtDvDUSemJd66) in Yuli, Hualien, Taiwan. Feel free to reach out and let's enjoy the hot springs together!
+
 ---
 
 **Note**: This is a deterministic parser optimized for reliability and unambiguous parsing, not for casual/colloquial Chinese numeral interpretation.

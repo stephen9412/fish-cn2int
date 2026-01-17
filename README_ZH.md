@@ -213,6 +213,10 @@ MIT 许可证 - 详见 LICENSE 文件。
 
 - Github: [@stephen9412](https://github.com/stephen9412)
 
+### 🏕️ 创作环境
+
+完成在台湾花莲玉里的[安通温泉](https://maps.app.goo.gl/rGRqAtDvDUSemJd66)旁的露营车上。欢迎约我一起来泡温泉！
+
 ---
 
 **注意**：这是一个确定性解析器，针对可靠性和无歧义解析进行了优化，不适用于随意/口语化的中文数字解释。
