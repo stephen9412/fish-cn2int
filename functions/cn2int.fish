@@ -9,10 +9,19 @@ function cn2int
 
     set input (_cn_map_digits $input)
 
-    set -l result 0
+    set -l thousands 0
     set -l hundreds 0
     set -l tens 0
     set -l units 0
+
+    if string match -q '*千*' -- $input
+        set -l parts (string split "千" -- $input)
+        set thousands $parts[1]
+        if test -z "$thousands"
+            set thousands 1
+        end
+        set input $parts[2]
+    end
 
     if string match -q '*百*' -- $input
         set -l parts (string split "百" -- $input)
@@ -41,18 +50,31 @@ function cn2int
     end
 
     set -l len (string length -- $units)
-    if test $len -eq 3
-        set hundreds (string sub -l 1 -- $units)
-        set tens (string sub -s 2 -l 1 -- $units)
-        set units (string sub -s 3 -l 1 -- $units)
+    if test $len -eq 4
+        set thousands (string sub -l 1 -- $units)
+        set hundreds (string sub -s 2 -l 1 -- $units)
+        set tens (string sub -s 3 -l 1 -- $units)
+        set units (string sub -s 4 -l 1 -- $units)
+    else if test $len -eq 3
+        if test $thousands -eq 0
+            set hundreds (string sub -l 1 -- $units)
+            set tens (string sub -s 2 -l 1 -- $units)
+            set units (string sub -s 3 -l 1 -- $units)
+        else
+            set tens (string sub -s 2 -l 1 -- $units)
+            set units (string sub -s 3 -l 1 -- $units)
+        end
     else if test $len -eq 2
-        if test $hundreds -eq 0
+        if test $thousands -eq 0; and test $hundreds -eq 0
+            set tens (string sub -l 1 -- $units)
+            set units (string sub -s 2 -l 1 -- $units)
+        else
             set tens (string sub -l 1 -- $units)
             set units (string sub -s 2 -l 1 -- $units)
         end
     end
 
-    math "$hundreds * 100 + $tens * 10 + $units"
+    math "$thousands * 1000 + $hundreds * 100 + $tens * 10 + $units"
 end
 
 
@@ -85,6 +107,7 @@ function _cn_map_digits
     set str (string replace -a '陆' '6' -- $str)
     set str (string replace -a '拾' '十' -- $str)
     set str (string replace -a '佰' '百' -- $str)
+    set str (string replace -a '仟' '千' -- $str)
     echo $str
 end
 
