@@ -1,8 +1,10 @@
 # fish-cn2int
 
+[![中文說明](https://img.shields.io/badge/DOCS-中文說明-red)](./README_ZH.md)
+
 A deterministic Chinese numeral to integer converter for Fish Shell.
 
-## Features
+## ✨ Features
 
 - **Deterministic Parsing**: Unambiguous conversion based on explicit Chinese numerals
 - **Comprehensive Range**: Supports numbers from 0 to 999,999,999 (9億9999萬9999)
@@ -14,7 +16,7 @@ A deterministic Chinese numeral to integer converter for Fish Shell.
 - **Extensive Test Coverage**: 1004+ test cases with TDD approach
 - **Pure Fish Shell**: No external dependencies
 
-## Installation
+## 📦 Installation
 
 ### Using Fisher
 
@@ -33,7 +35,7 @@ source fish-cn2int/functions/cn2int.fish
 
 Or copy `functions/cn2int.fish` to your `~/.config/fish/functions/` directory.
 
-## Usage
+## 🚀 Usage
 
 ```fish
 cn2int 一二三四五         # 12345
@@ -90,7 +92,7 @@ cn2int 一萬零一   # 10001
 cn2int 一億零一萬 # 100010000
 ```
 
-## Important: Deterministic Parsing
+## ⚠️ Important: Deterministic Parsing
 
 This parser uses **deterministic rules** and does NOT interpret colloquial shortcuts:
 
@@ -120,12 +122,12 @@ Colloquial Chinese numerals are **context-dependent** and ambiguous:
 
 This parser follows **explicit, unambiguous rules** for reliable parsing in scripts and automation.
 
-## Supported Number Range
+## 🔢 Supported Number Range
 
 - **Minimum**: 0 (零/〇)
 - **Maximum**: 999,999,999 (九億九千九百九十九萬九千九百九十九)
 
-## Testing
+## 🧪 Testing
 
 This project uses [fishtape](https://github.com/jorgebucaran/fishtape) for testing.
 
@@ -154,7 +156,7 @@ fishtape tests/*.fish
   - Zero handling (零/〇)
   - Traditional/simplified mixing
 
-## Architecture
+## 🏗️ Architecture
 
 ```
 cn2int (entry point)
@@ -169,7 +171,7 @@ cn2int (entry point)
             └─> handles implicit digits
 ```
 
-## Examples
+## 💡 Examples
 
 ### Complex Numbers
 
@@ -194,7 +196,7 @@ cn2int 五億零叁萬        # Mix traditional 億 with simplified 叁
 # 500030000
 ```
 
-## Contributing
+## 🤝 Contributing
 
 Contributions are welcome! Please ensure:
 
@@ -203,11 +205,29 @@ Contributions are welcome! Please ensure:
 3. Follow existing code style
 4. Update documentation
 
-## License
+### Development Setup
+
+To contribute to this project:
+
+```fish
+# 1. Install fishtape testing framework
+fisher install jorgebucaran/fishtape
+
+# 2. Clone the repository
+git clone https://github.com/stephen9412/fish-cn2int.git
+cd fish-cn2int
+
+# 3. Run all tests
+fishtape tests/*.fish
+```
+
+Make your changes, add tests for new features, and ensure all tests pass before submitting a pull request.
+
+## 📄 License
 
 MIT License - see LICENSE file for details.
 
-## Author
+## 👤 Author
 
 **Stephen J. Li**
 

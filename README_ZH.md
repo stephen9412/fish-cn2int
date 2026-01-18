@@ -1,8 +1,10 @@
 # fish-cn2int
 
+[![English](https://img.shields.io/badge/DOCS-English-blue)](./README.md)
+
 Fish Shell 的确定性中文数字转整数工具。
 
-## 特性
+## ✨ 特性
 
 - **确定性解析**：基于明确的中文数字进行无歧义转换
 - **完整范围**：支持 0 到 999,999,999（9亿9999万9999）
@@ -14,7 +16,7 @@ Fish Shell 的确定性中文数字转整数工具。
 - **广泛的测试覆盖**：1004+ 个测试用例，采用 TDD 方法
 - **纯 Fish Shell**：无外部依赖
 
-## 安装
+## 📦 安装
 
 ### 使用 Fisher
 
@@ -33,7 +35,7 @@ source fish-cn2int/functions/cn2int.fish
 
 或将 `functions/cn2int.fish` 复制到 `~/.config/fish/functions/` 目录。
 
-## 使用
+## 🚀 使用
 
 ```fish
 cn2int 一二三四五         # 12345
@@ -90,7 +92,7 @@ cn2int 一万零一   # 10001
 cn2int 一亿零一万 # 100010000
 ```
 
-## 重要：确定性解析
+## ⚠️ 重要：确定性解析
 
 此解析器使用**确定性规则**，不解释口语化的简写：
 
@@ -120,12 +122,12 @@ cn2int 三千五百   # 3500 ✓
 
 此解析器遵循**明确、无歧义的规则**，以便在脚本和自动化中可靠使用。
 
-## 支持的数字范围
+## 🔢 支持的数字范围
 
 - **最小值**：0（零/〇）
 - **最大值**：999,999,999（九亿九千九百九十九万九千九百九十九）
 
-## 测试
+## 🧪 测试
 
 此项目使用 [fishtape](https://github.com/jorgebucaran/fishtape) 进行测试。
 
@@ -154,7 +156,7 @@ fishtape tests/*.fish
   - 零的处理（零/〇）
   - 繁简体混用
 
-## 架构
+## 🏗️ 架构
 
 ```
 cn2int（入口）
@@ -169,7 +171,7 @@ cn2int（入口）
             └─> 处理隐式数字
 ```
 
-## 示例
+## 💡 示例
 
 ### 复杂数字
 
@@ -194,7 +196,7 @@ cn2int 五億零叁萬        # 繁体 億 混合简体 叁
 # 500030000
 ```
 
-## 贡献
+## 🤝 贡献
 
 欢迎贡献！请确保：
 
@@ -203,11 +205,29 @@ cn2int 五億零叁萬        # 繁体 億 混合简体 叁
 3. 遵循现有代码风格
 4. 更新文档
 
-## 许可证
+### 开发环境设置
+
+要为此项目做贡献：
+
+```fish
+# 1. 安装 fishtape 测试框架
+fisher install jorgebucaran/fishtape
+
+# 2. 克隆仓库
+git clone https://github.com/stephen9412/fish-cn2int.git
+cd fish-cn2int
+
+# 3. 运行所有测试
+fishtape tests/*.fish
+```
+
+进行修改，为新功能添加测试，并确保所有测试通过后再提交 pull request。
+
+## 📄 许可证
 
 MIT 许可证 - 详见 LICENSE 文件。
 
-## 作者
+## 👤 作者
 
 **Stephen J. Li**
 
